@@ -8,5 +8,8 @@
     "start": "node server.js"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "reconnecting-websocket": "^3.2.2"
+  }
 }

@@ -1,3 +1,5 @@
+var busModule = require('./bus');
+
 var Control = function Control(connections) {
     this.SAUNA_ON = 0;
     this.SAUNA_OFF = 1;
@@ -6,7 +8,9 @@ var Control = function Control(connections) {
         status: this.SAUNA_OFF,
         temperature: 37.4,
         humidity: 60,
+        setTemperature: 0,
     }
+    this.bus = new busModule(this);
 };
 
 Control.prototype.parseMessage = function(connection, message) {
@@ -16,10 +20,11 @@ Control.prototype.parseMessage = function(connection, message) {
     } catch (e) {
         console.log(e);
     }
+    console.log(message);
     if (data) {
         switch (data.type) {
-            case 'parseGetActualSaunaState':
-                this.sendActualSaunaState(connection);
+            case 'getActualSaunaState':
+                this.parseGetActualSaunaState(connection);
                 break;
             case 'setSaunaStatus':
                 this.parseSetSaunaStatus(connection, data.data);
@@ -53,18 +58,27 @@ Control.prototype.parseSetSaunaStatus = function (connection, data) {
     } else {
         console.log("problem " + status);
     }
+    this.bus.setSaunaState();
 };
 
 
 Control.prototype.parseSetTemperature = function (connection, data) {
     var temperature = parseFloat(data.temperature);
     if (temperature) {
-        this.actualSaunaState.temperature = temperature;
+        this.actualSaunaState.setTemperature = temperature;
         this.broadcastActualSaunaState();
     } else {
         console.log("problem " + temperature);
     }
+    this.bus.setSaunaState();
 };
+
+Control.prototype.setActualTemperature = function(temperature) {
+    if (temperature != this.actualSaunaState.temperature) {
+        this.actualSaunaState.temperature = temperature;
+        this.broadcastActualSaunaState();
+    }
+}
 
 
 module.exports = Control;
