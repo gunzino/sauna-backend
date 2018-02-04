@@ -8,7 +8,7 @@ var Control = function Control(connections) {
         status: this.SAUNA_OFF,
         temperature: 37.4,
         humidity: 60,
-        setTemperature: 0,
+        setTemperature: 80,
     }
     this.bus = new busModule(this);
 };
@@ -77,6 +77,9 @@ Control.prototype.setActualTemperature = function(temperature) {
     if (temperature != this.actualSaunaState.temperature) {
         this.actualSaunaState.temperature = temperature;
         this.broadcastActualSaunaState();
+        if (this.actualSaunaState.status === 1) {
+            this.bus.controlSaunaSpirals();
+        }
     }
 }
 
