@@ -1,7 +1,7 @@
 var Gpio = require('onoff').Gpio;
 var Bus = function Bus(control) {
     this.control = control;
-    this.pinOut =  [4, 17, 22];
+    this.pinOut =  [4, 17, 27];
     this.gpios = [];
     this.INTERVAL = 10000;
 
