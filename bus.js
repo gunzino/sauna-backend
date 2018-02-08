@@ -23,7 +23,7 @@ Bus.prototype.setInitialState = function() {
         this.gpios.push(gpio);
     }
     this.gpios.forEach(function (gpio) {
-        gpio.write(0);
+        gpio.write(1);
     });
 };
 
@@ -33,7 +33,7 @@ Bus.prototype.setSaunaState = function() {
         this.controlSaunaSpirals();
     } else {
         this.gpios.forEach(function (gpio) {
-            gpio.write(0);
+            gpio.write(1);
         });
     }
 };
@@ -43,16 +43,16 @@ Bus.prototype.controlSaunaSpirals = function () {
     var tempDifference = saunaState.setTemperature - saunaState.temperature;
     if (tempDifference > 10) {
         this.gpios.forEach(function (gpio) {
-            gpio.write(1);
+            gpio.write(0);
         });
     } else if (tempDifference > 0 && tempDifference <= 10) {
-        this.gpios[0].write(1);
-        this.gpios[1].write(1);
-        this.gpios[2].write(0);
-    } else {
-        this.gpios[0].write(1);
+        this.gpios[0].write(0);
         this.gpios[1].write(0);
-        this.gpios[2].write(0);
+        this.gpios[2].write(1);
+    } else {
+        this.gpios[0].write(0);
+        this.gpios[1].write(1);
+        this.gpios[2].write(1);
     }
 };
 
